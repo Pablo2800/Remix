@@ -1,22 +1,22 @@
-import { json, ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useLoaderData, useFetcher } from "@remix-run/react";
-import invariant from "tiny-invariant";
-import type { FunctionComponent } from "react";
-import { getContact, updateContact } from "../data";
-import type { ContactRecord } from "../data";
+import { json, ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { Form, useLoaderData, useFetcher } from '@remix-run/react';
+import invariant from 'tiny-invariant';
+import type { FunctionComponent } from 'react';
+import { getContact, updateContact } from '../data';
+import type { ContactRecord } from '../data';
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  invariant(params.contactId, "Missing contactId param");
+  invariant(params.contactId, 'Missing contactId param');
   const contact = await getContact(params.contactId);
   if (!contact) {
-    throw new Response("Not Found", { status: 404 });
+    throw new Response('Not Found', { status: 404 });
   }
   return json({ contact });
 };
 export const action = async ({ params, request }: ActionFunctionArgs) => {
-  invariant(params.contactId, "Missing contactId param");
+  invariant(params.contactId, 'Missing contactId param');
   const formData = await request.formData();
   return updateContact(params.contactId, {
-    favorite: formData.get("favorite") === "true",
+    favorite: formData.get('favorite') === 'true',
   });
 };
 export default function Contact() {
@@ -40,7 +40,7 @@ export default function Contact() {
             </>
           ) : (
             <i>No Name</i>
-          )}{" "}
+          )}{' '}
           <Favorite contact={contact} />
         </h1>
 
@@ -64,7 +64,7 @@ export default function Contact() {
             method="post"
             onSubmit={(event) => {
               const response = confirm(
-                "Please confirm you want to delete this record."
+                'Please confirm you want to delete this record.'
               );
               if (!response) {
                 event.preventDefault();
@@ -80,20 +80,20 @@ export default function Contact() {
 }
 
 const Favorite: FunctionComponent<{
-  contact: Pick<ContactRecord, "favorite">;
+  contact: Pick<ContactRecord, 'favorite'>;
 }> = ({ contact }) => {
   const fetcher = useFetcher();
   const favorite = fetcher.formData
-    ? fetcher.formData.get("favorite") === "true"
+    ? fetcher.formData.get('favorite') === 'true'
     : contact.favorite;
   return (
     <fetcher.Form method="post">
       <button
-        aria-label={favorite ? "Remove from favorites" : "Add to favorites"}
+        aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
         name="favorite"
-        value={favorite ? "false" : "true"}
+        value={favorite ? 'false' : 'true'}
       >
-        {favorite ? "★" : "☆"}
+        {favorite ? '★' : '☆'}
       </button>
     </fetcher.Form>
   );
